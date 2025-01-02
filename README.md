@@ -39,26 +39,20 @@ docker rmi $(docker images --format "{{.ID}}")
 
 ### Тесты
 
-Компиляция кода, запуск тестов и генерация Jacoco репортов для каждого модуля:
+Запуск тестов и генерация общего Jacoco-репорта происходит в 2 этапа:
+
+1) Компиляция кода, запуск тестов и генерация Jacoco репортов для каждого модуля (`target/jacoco.exec`)
+
+2) Слияние всех репортов в один (`target/site/jacoco-aggregate/index.html`)
+
 ```bash
 cd lab2_rus
 mvn clean package
-```
-
-После чего в каждом модуле где подключен плагин Jacoco должен появиться файл с данными о покрытии кода тестами:
-
-`target/jacoco.exec`
-
-Слияние всех репортов в один:
-```bash
-cd lab2_rus
 mvn verify -DskipTests
 ```
 
-После чего в модуле `code-coverage` должен появиться файл с данными о покрытии кода тестами со всех модулей:
+На этапе слияния (`mvn verify -DskipTests`) важно **не** вызывать команду clean чтобы она не удалила репорты в каждом модуле
 
-`target/site/jacoco-aggregate/index.html`
-
-Общий репорт можно открыть в браузере, например:
+Общий репорт генерируется в модуле `code-coverage`, его можно открыть в браузере, например:
 
 `/home/username/lab2_rus/code-coverage/target/site/jacoco-aggregate/index.html`
